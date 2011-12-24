@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<html lang="pt">
+
+<head>
+	<meta charset="utf-8">
+
+	<title>woahdude! spirals!</title>
+
+	<style>
+	html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+	</style>
+</head>
+
+<body>
+	<canvas id="canvas"></canvas>
+	<script>
+		// forked from tholman's "ぐるぐる"
+		// forked from tyfkda's "ぐるぐる" http://jsdo.it/tyfkda/rukS
+
+		var requestAnimFrame = 
+			window.requestAnimationFrame ||
+			window.webkitRequestAnimationFrame ||
+			window.mozRequestAnimationFrame ||
+			window.oRequestAnimationFrame ||
+			window.msRequestAnimationFrame ||
+			function(callback, element) {
+				window.setTimeout(callback, 1000 / 60);
+			};
+
+		var canvas = document.getElementById('canvas');
+		var context = canvas.getContext("2d");
+
+		var cx, cy;
+		var angStep = 0;
+		var stepAccel = 0.00015;
+
+		initialize();
+
+		function initialize() {
+			window.addEventListener('resize', resize, false);
+			canvas.addEventListener('click', click, false);
+
+			resize();
+			animate();
+		}
+
+		function click() {
+			stepAccel += 0.00005;
+			angStep = 0;
+		}
+
+		function resize() {
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+
+			cx = canvas.width / 2;
+			cy = canvas.height / 2;
+		}
+
+		function fillCircle(x, y, r) {
+			context.beginPath();
+			context.arc(x, y, r, 0, 2 * Math.PI, true);
+			context.fill();
+		}
+
+		function animate() {
+			requestAnimFrame(animate);
+
+			context.fillStyle = 'black';
+			context.fillRect(0, 0, canvas.width, canvas.height);
+			
+			angStep += stepAccel;
+			if (angStep >= 2 * Math.PI) {
+				angStep -= 2 * Math.PI;
+			}
+
+			drawSpiral(angStep);
+		}
+
+		function drawSpiral(angStep) {
+			var MaxR = Math.sqrt(cx*cx + cy*cy);
+			var ang = 0, r = 0;
+
+			context.fillStyle = 'red';
+
+			do {
+				var x = (r * Math.sin(ang) + cx);
+				var y = (r * Math.cos(ang) + cy);
+				var R = Math.sqrt(r/2);
+				fillCircle(x, y, R);
+
+				ang += angStep;
+				r += 1.3;
+			} while (r <= MaxR + R);
+		}
+	</script>
+</body>
+
+</html>
