@@ -41,9 +41,8 @@
 			window.addEventListener('resize', resize, false);
 			canvas.addEventListener('click', click, false);
 
-			if (window.location.hash) {
-				stepAccel = Number(window.location.hash.substr(1)) || 0.00015;
-			}
+			window.location.hash = window.location.hash || '0.00025';
+			stepAccel = Number(window.location.hash.substr(1)) || 0.00025;
 
 			resize();
 			animate();
